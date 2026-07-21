@@ -59,10 +59,29 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-      needs: build-and-push
-      runs-on: ubuntu-latest
-      steps:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy over SSH
+        id: deploy
+        continue-on-error: true
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          debug: true
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f
+
+      - name: Retry deploy if first attempt failed
+        if: steps.deploy.outcome == 'failure'
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}

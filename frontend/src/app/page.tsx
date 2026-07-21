@@ -21,9 +21,9 @@ export default function HomePage() {
   return (
     <main style={styles.main}>
       <form style={styles.card} onSubmit={handleJoin}>
-        <h1 style={styles.title}>Socket.IO Chat</h1>
+        <h1 style={styles.title}>Enjoyable Chat</h1>
         <p style={styles.subtitle}>
-          Next.js + NestJS + Socket.IO + Postgres + Redis
+          Take your time to chat with your friends
         </p>
 
         <label style={styles.label}>
