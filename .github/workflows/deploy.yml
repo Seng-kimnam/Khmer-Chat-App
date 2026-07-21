@@ -2,8 +2,7 @@ name: Build, push, and deploy
 
 on:
   push:
-    branches: 
-      - main
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -60,9 +59,9 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
+      needs: build-and-push
+      runs-on: ubuntu-latest
+      steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -70,6 +69,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          debug: true
           script: |
             set -e
             cd ${{ secrets.DEPLOY_PATH }}
