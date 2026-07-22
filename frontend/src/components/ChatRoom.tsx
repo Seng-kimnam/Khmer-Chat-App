@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSocket } from '@/lib/socket';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 interface ChatMessage {
   id?: string;
@@ -159,7 +160,8 @@ export default function ChatRoom({ room, username }: ChatRoomProps) {
             }}
           >
             {m.username === 'system' ? (
-              <div style={styles.systemMessage}>{m.content}</div>
+              <div style={styles.systemMessage}>{m.content} </div>
+              
             ) : (
               <div
                 style={{
@@ -167,12 +169,30 @@ export default function ChatRoom({ room, username }: ChatRoomProps) {
                   background: m.username === username ? '#4f7cff' : '#222735',
                 }}
               >
+                
                 {m.username !== username && (
-                  <div style={styles.bubbleAuthor}>{m.username}</div>
+                  <div style={styles.bubbleAuthor}>{m.username}
+                  </div>
                 )}
                 <div>{m.content}</div>
+
               </div>
             )}
+            {/* <h1 style={{color: "white"}}>...</h1> */}
+            <DropdownMenu>
+  <DropdownMenuTrigger render={<button />}>
+    ...
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuGroup>
+      
+      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem>Delete</DropdownMenuItem>
+    </DropdownMenuGroup>
+ 
+  </DropdownMenuContent>
+</DropdownMenu>
+
           </div>
         ))}
         <div ref={bottomRef} />

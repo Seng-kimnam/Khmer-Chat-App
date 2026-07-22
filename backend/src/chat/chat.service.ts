@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Room } from './entities/room.entity';
@@ -24,6 +24,29 @@ export class ChatService {
 
   async listRooms(): Promise<Room[]> {
     return this.roomRepository.find({ order: { createdAt: 'ASC' } });
+  }
+  async listMessages() : Promise<Message[]> {
+    
+    return this.messageRepository.find({order : {createdAt : 'ASC'}});
+  }
+
+  async deleteMessageByUserId(id : string) : Promise<any> {
+    const message = this.messageRepository.findOne({where : {id : id}})
+    if(!message){
+      throw new NotFoundException(`Message with id ${id} not found`);
+    }
+
+    this.messageRepository.delete({id})
+    return `Message with id ${id} delete successfully. `
+
+  }
+
+  async fetchMessageById(id : string) : Promise<Message | null> {
+    const message = this.messageRepository.findOne({where : {id : id}})
+    if(!message){
+      throw new NotFoundException(`Message with id ${id} not found`);
+    }
+    return message
   }
 
   async saveMessage(

@@ -20,7 +20,7 @@ async function bootstrap() {
   await redisIoAdapter.connectToRedis();
   app.useWebSocketAdapter(redisIoAdapter);
 
-  const port = process.env.PORT ?? 4000;
+  const port = process.env.PORT ?? 4001;
   await app.listen(port);
   console.log(`Chat backend listening on port ${port}`);
 }
